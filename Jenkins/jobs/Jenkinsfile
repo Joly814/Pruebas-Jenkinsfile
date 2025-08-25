@@ -1,3 +1,9 @@
+import groovy.json.JsonSlurperClassic
+
+def jsonParse(def json){
+    new groovy.json.JsonSlurperClassic().parseText(json)
+}
+
 pipeline {
     agent any
     environment {
@@ -127,4 +133,18 @@ bsysFK6DL4lY7Y+enpFS78Z+SOI=
             }
         }
     }
+
+    post {
+        always {
+            deleteDir() // limpia workspace en B
+            sh "echo 'Fase Always'"
+        }
+        success {
+            sh "echo 'Fase Success'"
+        }
+        failure {
+            sh "echo 'Fase Failure'"
+        }
+    }
+
 }
