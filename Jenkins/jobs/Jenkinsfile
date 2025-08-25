@@ -13,106 +13,22 @@ pipeline {
         serverAUser = "root"
         serverAHost = "64.23.151.32"
         remoteFileA = "/srv/logsopenbravo/openbravo_20250825_1600.log"
-        serverAPassphrase = "S!desoft@dm!n" // Passphrase de la key A
-        serverAKey = '''-----BEGIN OPENSSH PRIVATE KEY-----
-b3BlbnNzaC1rZXktdjEAAAAACmFlczI1Ni1jdHIAAAAGYmNyeXB0AAAAGAAAABD3fTW8z+
-yLxEI5vOuGqO9oAAAAEAAAAAEAAAGXAAAAB3NzaC1yc2EAAAADAQABAAABgQCadFtzte66
-MALQjkNWmwLS/ZK4FNYOA51+GQIZKHOYTWkLj6UUjxJg9qC0EFpMfI5I8FaHLQMAc8G5tP
-fGuRxmsu6VfXw6cFmkGJ8h4i62pojsIGXJFbos/MW9hCBkIPSMvxAxn3TIA8X8XCM/jcWn
-5CGSR65GXTJSvaIuY0MfWra6XcEgxMbk43+Ctzzk9OuICzLMSgVEgEzzv0mGNp2qsCaej+
-BlyR8qDUhGwHKZVVeZ+bL8N6Ki6OMhD8bHlycwAENE3XykQ0i1gs1dJovxOFT29CNOiL4M
-liOtKnPe1JFfijeuWnR4chrkGRk2Paycdo4x8BfcSQu7VOXdlqLNCAG1NwWpT4Tgnvz6fW
-XldjuNTxqTtQEG0JhrNlYnez+7O+igjnLtI6mDG0i0gQm+mREzFBqeSlH0HSAhrKQCSiTO
-j/EAYmVRxXUiKu438eqILtem42nTiZivVTPmffeUKA2CSr021CaSfoFczvRW6IGydFxtRr
-ikxUE+1Gg6opUAAAWgFlBGTKaA+DNya01jMbNKeiQhZYrHbPwLmaqIVEGVLk7CvxEvTZQV
-rq/CqmHxEzzbW/hL3M/Vec0H3FbEm0BHDR6NVdLvTMqrlqZ0N7yu/py2m9QMnFjUBgx0m4
-MjrAPlSz09VlDGhfnC4NPYdebCoV39RzF9sWh7elGeold8Ts5smCOsg8t4Yg3KgKPvwlgH
-UxWRkvwTEuQcY3HXqgmwUs46M1frWclolDwFGUfU9OYljBg85qEow28ifWACgmB+EjKJ+5
-1el3I28JIXXcfDvUvzqCbR+Wm7L15Cxi0IWsIRtx3neOv6V6A1xKm6PdEfDdaEAS6bMdjJ
-3JFClCB/WxfIVKe7vmb4Nj+QP/b8+g4s3X7QiJXTrYrMfacoD4SyemG20ra3IiZJO12nG1
-mGV9GltcglGYEwOwp2nZxUkfDFV5xZcs2ti9fUiRohoS7YxjxrIpA6j6W57DTchpBQtsH0
-S6IyEen3aHNo/9HJIcfD2LNaTaBnM9S8wGIGxGYqBPhIo9yyUVCflO1P4YiIG25H3AT9TK
-dJ/8Ir69901KiEp7w+s7Ht6D6J+rDDLa62UU8RkJCn/G6R9tfXTs65XnB2x79PPCJwq2y7
-3e485gVr8hj9nJedIahVlwoMEL1uAB9QCGETRG2437PDK94mFyhYdYjpQsHoYW4b+lQ+jB
-aaE4eYGrVQA1HlQn3LvKYRE++O6d29hVIt1GeSFqAL9a7uz7jbHWn8S2qSbbDfN6+FHPd8
-NEt5+FWqz6AnnobYjeHh+CCLgKqhivyA0xmDDGjRH+yr5MY2Q2HFvOaClzvVSGV8TtMLfA
-ocCu9ovox3sWUneemXH7ePIgoIpitD4Cz1rM5Mo/Cir2ANIANoJxpd0JQkn3wDKyCkH6z6
-OTggp/UwpIb8t+dZRdP/wkc8LD7HtDalqAS/2jq33J7eAZYm/HOqhC0Hx9q9krEHfXolTo
-PFLaKLXJeHuosJWeQpcJAd75puvGoaBPjr7TXlzwKwKUFnYe42e1eQ0qMsrIwadF5PGrs7
-4pSU+vI+M2p0EowaYI83SGFOv2+Ytj+8Dzkk4MxHC6s/d2n84uRjIDtGGjLZDcCwjEdMrz
-DXOwY1v4JMeAX4HUQU9zwK0dfj/AuHNDo4S66WxgINY5OSWgHWrmMJXEFQr0ZnvUm0LnWY
-z7vXXvYRM9+ThOFTlFlcrfMP54Lw6mJm1zCK7lQQwyj6GWPcb+Ta08jy7N2prRrmkl26rm
-bbPgASbw6BeNhFCzlE2f1g2gHnWvEbXL2yOVNdWbNLtocB2vUB84y8Oh85yeREydPhH4En
-6HVhKXz38UyOxJOe775IlDGDu+BZJvEKmRVvQ/Vk3wSrUi4N5rFvdFIQGm1gO7re2mzleM
-nkaSjaSMyVmjirLjWsfqsiixM+yI6IHKzVWM7j7fgk7bb7nG/OcV/8njLYQTqV34zvEh8y
-v99+MTHbdxEmZwVXgjetWeENw8+zJBZp4Hhc6FSP8c2UuaB6Qh0TDprWRKeRPziUOLWoqc
-9JMa5LBoq17fIpWBlBFTmYrgT7+j0AdLV5obpbaeDOqkxbQcRRf1E9WCrQGO9XKsXchWZ5
-ENG45LSlz6csyC1LxHN/fwy2hJWL9rlWHa7PwT9DHVbJ+KmhE9TSohjyrdSQRc5EdHsugi
-2wOZrAFGkpOwybpRAfMK9IsxAn+ucdlZccftxRb4y1asRIAl4bKdpsDStFwASSBtrDU16j
-Sd3xMvZNFIz2uJ7tf/En+ZoubL38dKAf/bxPenJ7t6NQEeHfNeksf08WzZqLqa3wTw2Qkw
-Mzll7L2rbv8JJKP6tCjj+KUzM9HEDRmeVX+Fy3kfMKsKmQ3pLgXfrgWZQygjY6+4zpv9Lb
-h2nIiJh7an9cNSQq7bidoGE2SrXuwJqCFKpkyCKb424LP4tU
------END OPENSSH PRIVATE KEY-----
-'''
+        serverAKeyPath = "/home/newdocker/keys/openbravo1" // Ruta de la key que funciona con ssh -i
 
         // Servidor C (destino)
         serverCUser = "ubuntu"
         serverCHost = "200.25.39.74"
         remotePathC = "/home/ubuntu/PruebasJenkisSFTP/"
-        serverCPassphrase = "S!desoft@dm!n" // Passphrase de la key C
-        serverCKey = '''-----BEGIN OPENSSH PRIVATE KEY-----
-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
-bsysFK6DL4lY7Y+enpFS78Z+SOI=
------END OPENSSH PRIVATE KEY-----
-'''
+        serverCKeyPath = "/home/newdocker/keys/openbravoedgeuno" // Ruta de la key del servidor C
     }
 
     stages {
         stage("Obtener archivo desde Servidor A") {
             steps {
                 script {
-                    writeFile file: 'serverA_key.pem', text: serverAKey
-                    sh "chmod 600 serverA_key.pem"
-
-                    // Usando sshpass para pasar la frase
                     sh """
                         echo "Obteniendo archivo desde Servidor A..."
-                        sshpass -p '${serverAPassphrase}' scp -o StrictHostKeyChecking=no -i serverA_key.pem ${serverAUser}@${serverAHost}:${remoteFileA} .
+                        scp -i ${serverAKeyPath} -o StrictHostKeyChecking=no ${serverAUser}@${serverAHost}:${remoteFileA} .
                     """
                 }
             }
@@ -122,12 +38,9 @@ bsysFK6DL4lY7Y+enpFS78Z+SOI=
             steps {
                 script {
                     def archivoLocal = "${remoteFileA.tokenize('/')[-1]}"
-                    writeFile file: 'serverC_key.pem', text: serverCKey
-                    sh "chmod 600 serverC_key.pem"
-
                     sh """
                         echo "Enviando archivo al Servidor C..."
-                        sshpass -p '${serverCPassphrase}' scp -o StrictHostKeyChecking=no -i serverC_key.pem ${archivoLocal} ${serverCUser}@${serverCHost}:${remotePathC}
+                        scp -i ${serverCKeyPath} -o StrictHostKeyChecking=no ${archivoLocal} ${serverCUser}@${serverCHost}:${remotePathC}
                     """
                 }
             }
@@ -146,5 +59,4 @@ bsysFK6DL4lY7Y+enpFS78Z+SOI=
             sh "echo 'Fase Failure'"
         }
     }
-
 }
