@@ -5,27 +5,66 @@ def jsonParse(def json){
 }
 
 pipeline {
-    agent any   // ✅ Ahora se ejecutará en cualquier nodo disponible
+    agent any
     environment {
-        appName = "variable" 
+        appName = "variable"
+
+        // Servidor A (origen)
+        serverAUser = "root"
+        serverAHost = "64.23.151.32"
+        remoteFileA = "/srv/logsopenbravo/openbravo_20250825_1600.log"
+
+        // Servidor C (destino)
+        serverCUser = "ubuntu"
+        serverCHost = "200.25.39.74"
+        remotePathC = "/home/ubuntu/PruebasJenkisSFTP/"
     }
-    stages
-    {
-        stage ("Paso1 "){
+
+    stages {
+        stage("Paso 1 - Hola Mundo") {
             steps {
                 script {
                     sh "echo 'Hola Mundo'"
                 }
             }
         }
+
+        stage("Obtener archivo desde Servidor A") {
+            steps {
+                script {
+                    // Se asume que la private key de A (con passphrase) está guardada en Jenkins con ID 'serverA-ssh-key'
+                    withCredentials([sshUserPrivateKey(credentialsId: 'PruebaGit-ssh-key', keyFileVariable: 'KEY_A', usernameVariable: 'USER_A')]) {
+                        sh """
+                            echo "Obteniendo archivo desde Servidor A..."
+                            scp -i $KEY_A $USER_A@$serverAHost:$remoteFileA .
+                        """
+                    }
+                }
+            }
+        }
+
+        stage("Enviar archivo al Servidor C") {
+            steps {
+                script {
+                    // Se asume que la private key de C (con passphrase) está guardada en Jenkins con ID 'serverC-ssh-key'
+                    withCredentials([sshUserPrivateKey(credentialsId: 'openbravo1-ssh-key', keyFileVariable: 'KEY_C', usernameVariable: 'USER_C')]) {
+                        sh """
+                            echo "Enviando archivo desde Servidor B a Servidor C..."
+                            scp -i $KEY_C $(basename $remoteFileA) $USER_C@$serverCHost:$remotePathC
+                        """
+                    }
+                }
+            }
+        }
     }
+
     post {
         always {
-            deleteDir()
+            deleteDir() // limpia workspace en B
             sh "echo 'Fase Always'"
         }
         success {
-            sh "echo 'fase success'"
+            sh "echo 'Fase Success'"
         }
         failure {
             sh "echo 'Fase Failure'"
