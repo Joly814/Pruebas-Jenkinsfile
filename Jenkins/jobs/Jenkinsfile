@@ -5,7 +5,7 @@ def jsonParse(def json){
 }
 
 pipeline {
-    agent { label 'main'}
+    agent any   // ✅ Ahora se ejecutará en cualquier nodo disponible
     environment {
         appName = "variable" 
     }
