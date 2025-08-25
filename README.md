@@ -6,3 +6,4 @@ Repositorio Pruebas Jenkinsfile
 
 * **Jolyt Mina** - Ticket 001 - "Prueba 001"
 * **Jolyt Mina** - Ticket 001 - "Correccio Prueba 001"
+* **Jolyt Mina** - Ticket 001 - "Correccio Prueba 001 - Etiqueta agent : label"
