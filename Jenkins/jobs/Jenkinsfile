@@ -14,42 +14,18 @@ pipeline {
     }
 
     stages {
-
-        stage('Preparar known_hosts') {
+        stage('Obtener Usuario SSH y Ruta de Clave') {
             steps {
-                // Agrega la huella del host remoto al archivo known_hosts temporal
-                sh """
-                    ssh-keyscan -H $REMOTE_HOST > $KNOWN_HOSTS_FILE
-                    chmod 600 $KNOWN_HOSTS_FILE
-                """
-            }
-        }
-
-        stage('SSH a servidor') {
-            steps {
-                withCredentials([
-                    sshUserPrivateKey(
-                        credentialsId: 'PruebaGit',
-                        keyFileVariable: 'SSH_KEY',
-                        usernameVariable: 'SSH_USER'
-                    )
-                ]) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'PruebaGit', 
+                                                   keyFileVariable: 'SSH_KEY', 
+                                                   usernameVariable: 'SSH_USER')]) {
                     script {
-                        // Asignamos usuario de la credencial
-                        env.REMOTE_USER = SSH_USER
-                    }
+                        // Mostrar usuario SSH de la credencial
+                        echo "Usuario SSH recuperado: ${SSH_USER}"
 
-                    // Ejecutamos comandos remotos de manera segura
-                    sh """
-                        ssh -i "$SSH_KEY" \
-                            -o UserKnownHostsFile=$KNOWN_HOSTS_FILE \
-                            -o StrictHostKeyChecking=yes \
-                            $REMOTE_USER@$REMOTE_HOST '
-                                echo "Conexión exitosa al host remoto"
-                                ls -la /home/$REMOTE_USER
-                                whoami
-                            '
-                    """
+                        // Mostrar únicamente la ruta temporal de la clave privada
+                        echo "Ruta temporal de la clave privada generada: ${SSH_KEY}"
+                    }
                 }
             }
         }
