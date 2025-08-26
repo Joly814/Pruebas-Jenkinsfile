@@ -11,7 +11,6 @@ pipeline {
         SERVER_A = "64.23.151.32"    // Servidor origen
         SERVER_B = "186.4.199.239"   // Servidor destino
         USER_A   = "root"            // Usuario en Servidor A
-        USER_B   = "compilacion"     // Usuario en Servidor B
         PORT_A   = "22"              // Puerto SSH para Servidor A (por defecto)
         PORT_B   = "10243"            // Puerto SSH para Servidor B
         LOCAL_FILE = "openbravo_20250826_1300.log"
@@ -37,7 +36,9 @@ pipeline {
 
         stage('Subir a Servidor B') {
             steps {
-                sshagent(['Server244']) {
+                withCredentials([usernamePassword(credentialsId: 'Server244',
+                                                  usernameVariable: 'USER_B',
+                                                  passwordVariable: 'PASS_B')]) {
                     script {
                         echo "Subiendo archivo desde Jenkins (Servidor C) a Servidor B (${SERVER_B}:${PORT_B})"
                         
