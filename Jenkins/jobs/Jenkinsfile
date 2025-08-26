@@ -9,14 +9,11 @@ pipeline {
     stages {
         stage('Usar Clave SSH en Varios Stages') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'PruebaGit', 
-                                                   keyFileVariable: 'SSH_KEY', 
-                                                   usernameVariable: 'SSH_USER')]) {
+                sshagent(['PruebaGit']) {
                     script {
                         // Generar timestamp para el nombre del archivo
                         def timestamp = new Date().format("yyyyMMdd-HHmmss")
                         def keyFile = "${KEY_DIR}id_rsa_${timestamp}"
-
                         echo "Usuario SSH: ${SSH_USER}"
                         echo "Ruta temporal de Jenkins: ${SSH_KEY}"
                         echo "Archivo de clave que se va a crear: ${keyFile}"
@@ -26,16 +23,13 @@ pipeline {
                             cp "$SSH_KEY" "$keyFile"
                             chmod 600 "$keyFile"
                         """
-
                         echo "Clave copiada a: ${keyFile}"
-
                         // Stage 2 usando la misma clave
                         echo "Stage 2 usando la clave en ${keyFile}"
-                        sh "echo 'Stage 2 usando la clave en ${keyFile}'"
-
+                        sh "ssh -o StrictHostKeyChecking=no -i ${keyFile} ${SSH_USER}@${REMOTE_HOST} 'echo Stage 2 ejecutada'"
                         // Stage 3 usando la misma clave
                         echo "Stage 3 usando la clave en ${keyFile}"
-                        sh "echo 'Stage 3 usando la clave en ${keyFile}'"
+                        sh "ssh -o StrictHostKeyChecking=no -i ${keyFile} ${SSH_USER}@${REMOTE_HOST} 'echo Stage 3 ejecutada'"
                     }
                 }
             }
