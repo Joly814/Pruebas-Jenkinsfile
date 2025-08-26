@@ -33,7 +33,7 @@ pipeline {
                 }
             }
         }
-
+/*
         stage('Subir a Servidor B') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'Server244',
@@ -52,7 +52,7 @@ pipeline {
                 }
             }
         }
-
+*/
         stage('Limpieza en Jenkins') {
             steps {
                 script {
