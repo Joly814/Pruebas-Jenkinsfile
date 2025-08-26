@@ -1,15 +1,9 @@
-import groovy.json.JsonSlurperClassic
-
-def jsonParse(def json){
-    new groovy.json.JsonSlurperClassic().parseText(json)
-}
-
 pipeline {
     agent any
 
     environment {
         REMOTE_HOST = "64.23.151.32"
-        NEW_KEY_PATH = "/home/" // Ruta donde quieres copiar la clave
+        KEY_DIR = "/home/" // Directorio donde se guardará la clave
     }
 
     stages {
@@ -19,30 +13,32 @@ pipeline {
                                                    keyFileVariable: 'SSH_KEY', 
                                                    usernameVariable: 'SSH_USER')]) {
                     script {
-                        // Stage 1
+                        // Generar timestamp para el nombre del archivo
+                        def timestamp = new Date().format("yyyyMMdd-HHmmss")
+                        def keyFile = "${KEY_DIR}id_rsa_${timestamp}"
+
                         echo "Usuario SSH: ${SSH_USER}"
-                        echo "Ruta temporal: ${SSH_KEY}"
+                        echo "Ruta temporal de Jenkins: ${SSH_KEY}"
+                        echo "Archivo de clave que se va a crear: ${keyFile}"
                         
-                        sh "echo 'Stage 1 usando la clave en ${SSH_KEY}'"
+                        // Crear el archivo con el contenido de la clave temporal
+                        sh """
+                            cp "$SSH_KEY" "$keyFile"
+                            chmod 600 "$keyFile"
+                        """
 
-                        // Copiar la clave a otra ruta
-                        sh "cp ${SSH_KEY} ${NEW_KEY_PATH}"
-                        sh "chmod 600 ${NEW_KEY_PATH}" // Ajusta permisos para usarla
+                        echo "Clave copiada a: ${keyFile}"
 
-                        echo "Clave copiada a: ${NEW_KEY_PATH}"
+                        // Stage 2 usando la misma clave
+                        echo "Stage 2 usando la clave en ${keyFile}"
+                        sh "echo 'Stage 2 usando la clave en ${keyFile}'"
 
-                        // Stage 2
-                        echo "Stage 2 reutilizando la misma clave"
-                        sh "echo 'Stage 2 usando la clave en ${NEW_KEY_PATH}'"
-
-                        // Stage 3
-                        echo "Stage 3 reutilizando la misma clave"
-                        sh "echo 'Stage 3 usando la clave en ${NEW_KEY_PATH}'"
+                        // Stage 3 usando la misma clave
+                        echo "Stage 3 usando la clave en ${keyFile}"
+                        sh "echo 'Stage 3 usando la clave en ${keyFile}'"
                     }
                 }
             }
         }
     }
 }
-
-
