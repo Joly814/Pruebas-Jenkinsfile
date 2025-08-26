@@ -15,8 +15,9 @@ pipeline {
         PORT_B   = "10243"            // Puerto SSH para Servidor B
         LOCAL_FILE = "openbravo_20250826_1300.log"
     }
-/*
+
     stages {
+        /*
         stage('Descargar desde Servidor A') {
             steps {
                 sshagent(['openbravo1']) {
