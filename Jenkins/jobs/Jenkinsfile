@@ -8,10 +8,12 @@ pipeline {
 
     agent any
     stages {
-        stage('Obtener Usuario SSH') {
+        stage('SSH a servidor') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'PruebaGit', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
-                    echo "Usuario SSH: ${SSH_USER}"
+                    sh '''
+                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no $SSH_USER@64.23.151.32 "ls"
+                    '''
                 }
             }
         }
