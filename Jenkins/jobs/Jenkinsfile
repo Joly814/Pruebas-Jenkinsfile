@@ -9,7 +9,7 @@ pipeline {
 
     environment {
         REMOTE_HOST = "64.23.151.32"
-        NEW_KEY_PATH = "/home/ssh_key_copy" // Ruta donde quieres copiar la clave
+        NEW_KEY_PATH = "/home/" // Ruta donde quieres copiar la clave
     }
 
     stages {
