@@ -5,15 +5,51 @@ def jsonParse(def json){
 }
 
 pipeline {
-
     agent any
+
+    environment {
+        REMOTE_HOST = "64.23.151.32"
+        KNOWN_HOSTS_FILE = "${env.WORKSPACE}/known_hosts"
+        REMOTE_USER = "" // se llenará dinámicamente desde la credencial
+    }
+
     stages {
+
+        stage('Preparar known_hosts') {
+            steps {
+                // Agrega la huella del host remoto al archivo known_hosts temporal
+                sh """
+                    ssh-keyscan -H $REMOTE_HOST > $KNOWN_HOSTS_FILE
+                    chmod 600 $KNOWN_HOSTS_FILE
+                """
+            }
+        }
+
         stage('SSH a servidor') {
             steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'PruebaGit', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
-                    sh '''
-                        ssh -i $SSH_KEY -o StrictHostKeyChecking=no $SSH_USER@64.23.151.32 "ls"
-                    '''
+                withCredentials([
+                    sshUserPrivateKey(
+                        credentialsId: 'PruebaGit',
+                        keyFileVariable: 'SSH_KEY',
+                        usernameVariable: 'SSH_USER'
+                    )
+                ]) {
+                    script {
+                        // Asignamos usuario de la credencial
+                        env.REMOTE_USER = SSH_USER
+                    }
+
+                    // Ejecutamos comandos remotos de manera segura
+                    sh """
+                        ssh -i "$SSH_KEY" \
+                            -o UserKnownHostsFile=$KNOWN_HOSTS_FILE \
+                            -o StrictHostKeyChecking=yes \
+                            $REMOTE_USER@$REMOTE_HOST '
+                                echo "Conexión exitosa al host remoto"
+                                ls -la /home/$REMOTE_USER
+                                whoami
+                            '
+                    """
                 }
             }
         }
@@ -21,7 +57,7 @@ pipeline {
 
     post {
         always {
-            deleteDir() // limpia workspace en B
+            deleteDir() // limpia workspace
             sh "echo 'Fase Always'"
         }
         success {
