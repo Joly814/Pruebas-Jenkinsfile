@@ -17,7 +17,7 @@ pipeline {
     }
 
     stages {
-        /*
+        
         stage('Descargar desde Servidor A') {
             steps {
                 sshagent(['openbravo1']) {
@@ -34,22 +34,15 @@ pipeline {
                 }
             }
         }
-*/
-        stage('Subir a Servidor B') {
+
+        stage('Subir archivo a Servidor B') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'Server244',
-                                                  usernameVariable: 'USER_B',
-                                                  passwordVariable: 'PASS_B')]) {
-                    script {
-                        echo "Subiendo archivo desde Jenkins (Servidor C) a Servidor B (${SERVER_B}:${PORT_B})"
-                        
-                        def destB = "${USER_B}@${SERVER_B}:/home/compilacion/Temp/"
-                        
-                        sh """
-                            ssh-keygen -R ${SERVER_B} || true
-                            sshpass -p "$PASS_B" scp -P ${PORT_B} -o StrictHostKeyChecking=no ${LOCAL_FILE} ${destB}
-                        """
-                    }
+                script {
+                    echo "Subiendo archivo desde Jenkins a Servidor B"
+
+                    sh """
+                        sshpass -p 'compilacion' scp -P 10243 /home/newdocker/keys/docker-compose.yml compilacion@186.4.199.239:/home/compilacion/Temp/
+                    """
                 }
             }
         }
