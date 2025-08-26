@@ -46,7 +46,7 @@ pipeline {
                         
                         sh """
                             ssh-keygen -R ${SERVER_B} || true
-                            scp -P ${PORT_B} -o StrictHostKeyChecking=no ${LOCAL_FILE} ${destB}
+                            sshpass -p "$PASS_B" scp -P ${PORT_B} -o StrictHostKeyChecking=no ${LOCAL_FILE} ${destB}
                         """
                     }
                 }
