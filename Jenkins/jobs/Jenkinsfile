@@ -5,43 +5,13 @@ def jsonParse(def json){
 }
 
 pipeline {
+
     agent any
-    environment {
-        appName = "variable"
-
-        // Servidor A (origen)
-        serverAUser = "root"
-        serverAHost = "64.23.151.32"
-        remoteFileA = "/srv/logsopenbravo/openbravo_20250825_1600.log"
-        serverAKeyPath = "/home/newdocker/keys/openbravo1" // Ruta de la key que funciona con ssh -i
-
-        // Servidor C (destino)
-        serverCUser = "ubuntu"
-        serverCHost = "200.25.39.74"
-        remotePathC = "/home/ubuntu/PruebasJenkisSFTP/"
-        serverCKeyPath = "/home/newdocker/keys/openbravoedgeuno" // Ruta de la key del servidor C
-    }
-
     stages {
-        stage("Obtener archivo desde Servidor A") {
+        stage('Obtener Usuario SSH') {
             steps {
-                script {
-                    sh """
-                        echo "Obteniendo archivo desde Servidor A..."
-                        scp -i ${serverAKeyPath} -o StrictHostKeyChecking=no ${serverAUser}@${serverAHost}:${remoteFileA} .
-                    """
-                }
-            }
-        }
-
-        stage("Enviar archivo al Servidor C") {
-            steps {
-                script {
-                    def archivoLocal = "${remoteFileA.tokenize('/')[-1]}"
-                    sh """
-                        echo "Enviando archivo al Servidor C..."
-                        scp -i ${serverCKeyPath} -o StrictHostKeyChecking=no ${archivoLocal} ${serverCUser}@${serverCHost}:${remotePathC}
-                    """
+                withCredentials([sshUserPrivateKey(credentialsId: 'PruebaGit', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
+                    echo "Usuario SSH: ${SSH_USER}"
                 }
             }
         }
