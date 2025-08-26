@@ -9,6 +9,7 @@ pipeline {
 
     environment {
         REMOTE_HOST = "64.23.151.32"
+        NEW_KEY_PATH = "/home/newdocker/keys/ssh_key_copy" // Ruta donde quieres copiar la clave
     }
 
     stages {
@@ -24,17 +25,24 @@ pipeline {
                         
                         sh "echo 'Stage 1 usando la clave en ${SSH_KEY}'"
 
-                        // Stage 2 dentro del mismo bloque
-                        echo "Stage 2 reutilizando la misma clave"
-                        sh "echo 'Stage 2 usando la clave en ${SSH_KEY}'"
+                        // Copiar la clave a otra ruta
+                        sh "cp ${SSH_KEY} ${NEW_KEY_PATH}"
+                        sh "chmod 600 ${NEW_KEY_PATH}" // Ajusta permisos para usarla
 
-                        // Stage 3 dentro del mismo bloque
+                        echo "Clave copiada a: ${NEW_KEY_PATH}"
+
+                        // Stage 2
+                        echo "Stage 2 reutilizando la misma clave"
+                        sh "echo 'Stage 2 usando la clave en ${NEW_KEY_PATH}'"
+
+                        // Stage 3
                         echo "Stage 3 reutilizando la misma clave"
-                        sh "echo 'Stage 3 usando la clave en ${SSH_KEY}'"
+                        sh "echo 'Stage 3 usando la clave en ${NEW_KEY_PATH}'"
                     }
                 }
             }
         }
     }
 }
+
 
