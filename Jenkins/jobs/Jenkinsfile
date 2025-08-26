@@ -8,43 +8,56 @@ pipeline {
     agent any
 
     environment {
-        SERVER_A = "64.23.151.32" //HappyCell
-        SERVER_B = "200.25.39.74" //Servidor - Soporte
+        SERVER_A = "64.23.151.32"  // Servidor origen (HappyCell)
+        SERVER_B = "200.25.39.74"  // Servidor destino (Soporte)
+        USER_A   = "root"      // Usuario en Servidor A
+        USER_B   = "ubuntu"        // Usuario en Servidor B
+        LOCAL_FILE = "openbravo_20250826_1300.log" // Nombre temporal en C
     }
 
     stages {
-        stage('Transferencia entre Servidores') {
+        stage('Descargar desde Servidor A') {
             steps {
-                // Conexión a Servidor A
                 sshagent(['openbravo1']) {
                     script {
-                        echo "Copiando archivo desde Servidor A al Servidor B"
+                        echo "Descargando archivo desde Servidor A a Jenkins (Servidor C)"
+                        
                         // Ruta origen en Servidor A
                         def fileA = "/srv/logsopenbravo/openbravo_20250826_1300.log"
-                        // Ruta destino en Servidor B
-                        def destB = "ubuntu@${SERVER_B}:/home/ubuntu/Temp/"
 
-                        sh "scp -o StrictHostKeyChecking=no ${fileA} ${destB}"
+                        // Descarga a directorio de trabajo en Jenkins
+                        sh """
+                            scp -o StrictHostKeyChecking=no ${USER_A}@${SERVER_A}:${fileA} ${LOCAL_FILE}
+                        """
                     }
                 }
-/*
-                // Conexión a Servidor B
-                sshagent(['ClaveServidorB']) {
+            }
+        }
+
+        stage('Subir a Servidor B') {
+            steps {
+                sshagent(['PruebaGit']) {
                     script {
-                        echo "Copiando archivo desde Servidor B al Servidor A"
-                        // Ruta origen en Servidor B
-                        def fileB = "/ruta/origen/archivoB.txt"
-                        // Ruta destino en Servidor A
-                        def destA = "usuarioA@${SERVER_A}:/ruta/destino/"
+                        echo "Subiendo archivo desde Jenkins (Servidor C) a Servidor B"
+                        
+                        // Ruta destino en Servidor B
+                        def destB = "${USER_B}@${SERVER_B}:/home/ubuntu/Temp/"
 
-                        sh "scp -o StrictHostKeyChecking=no ${fileB} ${destA}"
+                        sh """
+                            scp -o StrictHostKeyChecking=no ${LOCAL_FILE} ${destB}
+                        """
                     }
                 }
-*/
+            }
+        }
+
+        stage('Limpieza en Jenkins') {
+            steps {
+                script {
+                    echo "Eliminando archivo temporal en Jenkins"
+                    sh "rm -f ${LOCAL_FILE}"
+                }
             }
         }
     }
 }
-
-
-
