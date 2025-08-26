@@ -9,38 +9,32 @@ pipeline {
 
     environment {
         REMOTE_HOST = "64.23.151.32"
-        KNOWN_HOSTS_FILE = "${env.WORKSPACE}/known_hosts"
-        REMOTE_USER = "" // se llenará dinámicamente desde la credencial
     }
 
     stages {
-        stage('Obtener Usuario SSH y Ruta de Clave') {
+        stage('Usar Clave SSH en Varios Stages') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'PruebaGit', 
                                                    keyFileVariable: 'SSH_KEY', 
                                                    usernameVariable: 'SSH_USER')]) {
                     script {
-                        // Mostrar usuario SSH de la credencial
-                        echo "Usuario SSH recuperado: ${SSH_USER}"
+                        // Stage 1
+                        echo "Usuario SSH: ${SSH_USER}"
+                        echo "Ruta temporal: ${SSH_KEY}"
+                        
+                        sh "echo 'Stage 1 usando la clave en ${SSH_KEY}'"
 
-                        // Mostrar únicamente la ruta temporal de la clave privada
-                        echo "Ruta temporal de la clave privada generada: ${SSH_KEY}"
+                        // Stage 2 dentro del mismo bloque
+                        echo "Stage 2 reutilizando la misma clave"
+                        sh "echo 'Stage 2 usando la clave en ${SSH_KEY}'"
+
+                        // Stage 3 dentro del mismo bloque
+                        echo "Stage 3 reutilizando la misma clave"
+                        sh "echo 'Stage 3 usando la clave en ${SSH_KEY}'"
                     }
                 }
             }
         }
     }
-
-    post {
-        always {
-            deleteDir() // limpia workspace
-            sh "echo 'Fase Always'"
-        }
-        success {
-            sh "echo 'Fase Success'"
-        }
-        failure {
-            sh "echo 'Fase Failure'"
-        }
-    }
 }
+
