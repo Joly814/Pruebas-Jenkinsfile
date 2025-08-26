@@ -25,11 +25,10 @@ pipeline {
                         
                         def fileA = "/srv/logsopenbravo/openbravo_20250826_1300.log"
                         
-                        sh '''
-                            set -e
+                        sh """
                             ssh-keygen -R ${SERVER_A} || true
                             scp -P ${PORT_A} -o StrictHostKeyChecking=no ${USER_A}@${SERVER_A}:${fileA} ${LOCAL_FILE}
-                        '''
+                        """
                     }
                 }
             }
@@ -37,7 +36,6 @@ pipeline {
 
         stage('Subir a Servidor B') {
             steps {
-                // Usando sshpass de manera segura con credenciales de Jenkins
                 withCredentials([usernamePassword(credentialsId: 'Server244',
                                                   usernameVariable: 'USER_B',
                                                   passwordVariable: 'PASS_B')]) {
@@ -46,12 +44,10 @@ pipeline {
                         
                         def destB = "${USER_B}@${SERVER_B}:/home/compilacion/Temp/"
                         
-                        sh '''
-                            set -e
+                        sh """
                             ssh-keygen -R ${SERVER_B} || true
-                            # sshpass usa la contraseña almacenada en Jenkins Credentials
                             sshpass -p "$PASS_B" scp -P ${PORT_B} -o StrictHostKeyChecking=no ${LOCAL_FILE} ${destB}
-                        '''
+                        """
                     }
                 }
             }
