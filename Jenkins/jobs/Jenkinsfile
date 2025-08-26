@@ -1,38 +1,50 @@
+import groovy.json.JsonSlurperClassic
+
+def jsonParse(def json){
+    new groovy.json.JsonSlurperClassic().parseText(json)
+}
+
 pipeline {
     agent any
 
     environment {
-        REMOTE_HOST = "64.23.151.32"
-        KEY_DIR = "/home/" // Directorio donde se guardará la clave
+        SERVER_A = "64.23.151.32" //HappyCell
+        SERVER_B = "200.25.39.74" //Servidor - Soporte
     }
 
     stages {
-        stage('Usar Clave SSH en Varios Stages') {
+        stage('Transferencia entre Servidores') {
             steps {
-                sshagent(['PruebaGit']) {
+                // Conexión a Servidor A
+                sshagent(['openbravo1']) {
                     script {
-                        // Generar timestamp para el nombre del archivo
-                        def timestamp = new Date().format("yyyyMMdd-HHmmss")
-                        def keyFile = "${KEY_DIR}id_rsa_${timestamp}"
-                        echo "Usuario SSH: ${SSH_USER}"
-                        echo "Ruta temporal de Jenkins: ${SSH_KEY}"
-                        echo "Archivo de clave que se va a crear: ${keyFile}"
-                        
-                        // Crear el archivo con el contenido de la clave temporal
-                        sh """
-                            cp "$SSH_KEY" "$keyFile"
-                            chmod 600 "$keyFile"
-                        """
-                        echo "Clave copiada a: ${keyFile}"
-                        // Stage 2 usando la misma clave
-                        echo "Stage 2 usando la clave en ${keyFile}"
-                        sh "ssh -o StrictHostKeyChecking=no -i ${keyFile} ${SSH_USER}@${REMOTE_HOST} 'echo Stage 2 ejecutada'"
-                        // Stage 3 usando la misma clave
-                        echo "Stage 3 usando la clave en ${keyFile}"
-                        sh "ssh -o StrictHostKeyChecking=no -i ${keyFile} ${SSH_USER}@${REMOTE_HOST} 'echo Stage 3 ejecutada'"
+                        echo "Copiando archivo desde Servidor A al Servidor B"
+                        // Ruta origen en Servidor A
+                        def fileA = "/srv/logsopenbravo/openbravo_20250826_1300.log"
+                        // Ruta destino en Servidor B
+                        def destB = "ubuntu@${SERVER_B}:/home/ubuntu/Temp/"
+
+                        sh "scp -o StrictHostKeyChecking=no ${fileA} ${destB}"
                     }
                 }
+/*
+                // Conexión a Servidor B
+                sshagent(['ClaveServidorB']) {
+                    script {
+                        echo "Copiando archivo desde Servidor B al Servidor A"
+                        // Ruta origen en Servidor B
+                        def fileB = "/ruta/origen/archivoB.txt"
+                        // Ruta destino en Servidor A
+                        def destA = "usuarioA@${SERVER_A}:/ruta/destino/"
+
+                        sh "scp -o StrictHostKeyChecking=no ${fileB} ${destA}"
+                    }
+                }
+*/
             }
         }
     }
 }
+
+
+
